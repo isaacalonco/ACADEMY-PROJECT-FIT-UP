@@ -1,17 +1,24 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
+import entidades.Aluno;
+import operacoes.AlunoOperacoes;
 
 public class Main {
+
     public static void main(String[] args) {
 
-        String url = "jdbc:postgresql://localhost:5432/academy";
-        String user = "postgres";
-        String password = "isaacalonco";
+        Aluno novoAluno = new Aluno(
 
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            System.out.println("Conectado com sucesso!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                "Isaac",
+                "12345678900",
+                "61999999999",
+                70,
+                1.75
+        );
+
+        AlunoOperacoes operacoes =
+                new AlunoOperacoes();
+
+        operacoes.cadastrarAluno(novoAluno);
+
+        operacoes.listarAlunos();
     }
 }
