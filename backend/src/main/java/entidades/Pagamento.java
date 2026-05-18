@@ -3,13 +3,15 @@ package entidades;
 public class Pagamento {
 
     private int idPagamento;
-    private String nomeAluno;
+    private int idAluno;
     private double valor;
     private String status;
 
-    public Pagamento(int idPagamento, String nomeAluno, double valor, String status) {
+    public Pagamento() {}
+
+    public Pagamento(int idPagamento, int idAluno, double valor, String status) {
         this.idPagamento = idPagamento;
-        this.nomeAluno = nomeAluno;
+        this.idAluno = idAluno;
         this.valor = valor;
         this.status = status;
     }
@@ -18,8 +20,8 @@ public class Pagamento {
         return idPagamento;
     }
 
-    public String getNomeAluno() {
-        return nomeAluno;
+    public int getIdAluno() {
+        return idAluno;
     }
 
     public double getValor() {
@@ -30,8 +32,8 @@ public class Pagamento {
         return status;
     }
 
-    public void setNomeAluno(String nomeAluno) {
-        this.nomeAluno = nomeAluno;
+    public void setIdAluno(int idAluno) {
+        this.idAluno = idAluno;
     }
 
     public void setValor(double valor) {
@@ -46,7 +48,7 @@ public class Pagamento {
     public String toString() {
         return "Pagamento{" +
                 "idPagamento=" + idPagamento +
-                ", nomeAluno='" + nomeAluno + '\'' +
+                ", idAluno=" + idAluno +
                 ", valor=" + valor +
                 ", status='" + status + '\'' +
                 '}';

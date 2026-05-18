@@ -6,6 +6,8 @@ public class Plano {
     private String nome;
     private double valor;
 
+    public Plano() {}
+
     public Plano(int id, String nome, double valor) {
         this.id = id;
         this.nome = nome;

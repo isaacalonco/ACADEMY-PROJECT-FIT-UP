@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Academy System — Documento do Projeto</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fira+Code&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;color:#1a1a2e;line-height:1.7;padding:40px 60px;max-width:900px;margin:0 auto;font-size:13px}
+h1{font-size:26px;text-align:center;margin-bottom:4px;color:#16213e}
+.subtitle{text-align:center;color:#555;margin-bottom:30px;font-size:14px}
+h2{font-size:18px;color:#0f3460;border-bottom:2px solid #0f3460;padding-bottom:4px;margin:28px 0 12px}
+h3{font-size:14px;color:#16213e;margin:16px 0 8px}
+p{margin-bottom:10px;text-align:justify}
+ul,ol{margin:0 0 10px 20px}
+li{margin-bottom:4px}
+table{width:100%;border-collapse:collapse;margin:10px 0 16px;font-size:12px}
+th{background:#0f3460;color:#fff;padding:6px 8px;text-align:left;font-weight:600}
+td{padding:5px 8px;border:1px solid #ddd}
+tr:nth-child(even){background:#f4f6fb}
+pre{background:#1a1a2e;color:#e0e0e0;padding:12px;border-radius:6px;overflow-x:auto;margin:8px 0 14px;font-size:11.5px;line-height:1.5}
+code{font-family:'Fira Code',monospace;font-size:11.5px}
+.code-inline{background:#eef;padding:1px 4px;border-radius:3px;font-size:12px}
+hr{border:none;border-top:1px solid #ccc;margin:20px 0}
+.tree{background:#f8f9fc;padding:12px;border-radius:6px;font-family:'Fira Code',monospace;font-size:11px;line-height:1.6;white-space:pre;margin:8px 0 14px}
+.check{color:#27ae60}
+@media print{body{padding:20px 30px;font-size:12px}h1{font-size:22px}h2{font-size:16px;break-after:avoid}pre{font-size:10px;break-inside:avoid}table{break-inside:avoid;font-size:11px}.no-break{break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<h1>ACADEMY SYSTEM</h1>
+<h1 style="font-size:18px;font-weight:400;color:#555;margin-bottom:6px">Sistema de Gestão de Academia</h1>
+<p class="subtitle"><strong>Trabalho Prático — Programação Orientada a Objetos (POO)</strong></p>
+<hr>
+
+<h2>2. Introdução</h2>
+<p>O presente trabalho consiste no desenvolvimento de um sistema completo de gerenciamento de academia, denominado <strong>Academy System</strong>, utilizando a linguagem de programação Java e os princípios fundamentais da Programação Orientada a Objetos (POO).</p>
+<p>O sistema foi criado para resolver um problema real e comum em academias de pequeno e médio porte: a dificuldade de gerenciar alunos, instrutores, planos e pagamentos de forma organizada, centralizada e eficiente.</p>
+<p>O Academy System oferece duas interfaces de uso: uma <strong>interface de linha de comando (CLI)</strong> para operação direta no terminal, e uma <strong>interface web gráfica</strong> acessível pelo navegador, ambas conectadas ao mesmo banco de dados embutido (SQLite). Isso permite que o sistema seja totalmente portátil.</p>
+
+<h2>3. Objetivo do Projeto</h2>
+<h3>3.1. Objetivo Geral</h3>
+<p>Desenvolver um sistema funcional de gestão de academia utilizando Java e os quatro pilares da Programação Orientada a Objetos, contemplando operações completas de CRUD (Create, Read, Update, Delete) em múltiplos módulos.</p>
+<h3>3.2. Objetivos Específicos</h3>
+<ul>
+<li>Implementar no mínimo 4 módulos (Alunos, Instrutores, Planos e Pagamentos), cada um com CRUD completo.</li>
+<li>Aplicar corretamente os conceitos de <strong>Abstração</strong>, <strong>Herança</strong>, <strong>Polimorfismo</strong> e <strong>Encapsulamento</strong>.</li>
+<li>Criar uma interface de linha de comando (CLI) com menus interativos e navegação intuitiva.</li>
+<li>Desenvolver uma interface web moderna como complemento visual do sistema.</li>
+<li>Utilizar banco de dados embutido SQLite para persistência dos dados de forma portátil.</li>
+<li>Garantir a integridade dos dados por meio de relacionamentos entre tabelas (chaves estrangeiras).</li>
+</ul>
+
+<h2>4. Justificativa</h2>
+<p>A gestão eficiente de uma academia envolve o controle simultâneo de diversas informações: dados pessoais dos alunos, especialidades dos instrutores, tipos e valores de planos, e o acompanhamento financeiro dos pagamentos.</p>
+<p>Um sistema digital e integrado elimina retrabalho, reduz erros humanos e permite consultas rápidas. Além disso, o projeto serve como um excelente exercício prático para consolidar os conceitos de POO estudados em sala de aula, pois exige a modelagem de entidades do mundo real, o uso de herança entre classes, a implementação de polimorfismo e o encapsulamento adequado dos dados.</p>
+
+<h2>5. Fundamentação Teórica</h2>
+<h3>5.1. Programação Orientada a Objetos (POO)</h3>
+<p>A POO é um paradigma de programação que organiza o software em torno de <strong>objetos</strong> — entidades que combinam dados (atributos) e comportamentos (métodos). Os quatro pilares fundamentais são:</p>
+<p><strong>Abstração:</strong> Consiste em representar apenas as características essenciais de uma entidade do mundo real. No projeto, a classe <code class="code-inline">Pessoa</code> é uma abstração que captura os atributos comuns a qualquer pessoa no sistema (nome, CPF).</p>
+<p><strong>Encapsulamento:</strong> É o princípio de proteger os dados internos de um objeto, permitindo acesso apenas através de métodos controlados (getters e setters).</p>
+<p><strong>Herança:</strong> Permite que uma classe (filha) herde atributos e métodos de outra classe (mãe), promovendo reutilização de código. No projeto, <code class="code-inline">Aluno</code> e <code class="code-inline">Instrutor</code> herdam da classe abstrata <code class="code-inline">Pessoa</code>.</p>
+<p><strong>Polimorfismo:</strong> Permite que um mesmo método tenha comportamentos diferentes dependendo da classe que o implementa. No projeto, o método abstrato <code class="code-inline">getDescricao()</code> é implementado de forma diferente em <code class="code-inline">Aluno</code> e em <code class="code-inline">Instrutor</code>.</p>
+
+<h3>5.2. Arquitetura em Camadas</h3>
+<ul>
+<li><strong>Camada de Entidades:</strong> Classes que representam os objetos do domínio.</li>
+<li><strong>Camada de Operações:</strong> Classes que contêm a lógica de negócio e as queries SQL.</li>
+<li><strong>Camada de Banco:</strong> Classe responsável pela conexão com o banco de dados.</li>
+<li><strong>Camada de Apresentação:</strong> A interface CLI e a interface Web.</li>
+</ul>
+
+<h2>6. Tecnologias Utilizadas</h2>
+<table>
+<tr><th>Tecnologia</th><th>Versão</th><th>Finalidade</th></tr>
+<tr><td><strong>Java</strong></td><td>21 (LTS)</td><td>Linguagem principal do backend</td></tr>
+<tr><td><strong>SQLite</strong></td><td>3.x</td><td>Banco de dados embutido</td></tr>
+<tr><td><strong>JDBC</strong></td><td>sqlite-jdbc 3.45</td><td>Conexão Java ↔ SQLite</td></tr>
+<tr><td><strong>Gson</strong></td><td>2.10.1</td><td>Serialização/deserialização JSON</td></tr>
+<tr><td><strong>Maven</strong></td><td>3.x</td><td>Gerenciamento de dependências e build</td></tr>
+<tr><td><strong>HttpServer</strong></td><td>JDK nativo</td><td>Servidor HTTP embutido</td></tr>
+<tr><td><strong>HTML5 / CSS3 / JS</strong></td><td>—</td><td>Interface web do frontend</td></tr>
+<tr><td><strong>IntelliJ IDEA</strong></td><td>—</td><td>IDE de desenvolvimento</td></tr>
+</table>
+
+<h2>7. Desenvolvimento do Projeto</h2>
+<p><strong>Etapa 1 — Planejamento:</strong> Definição das entidades, atributos e relacionamentos. Criação do modelo relacional.</p>
+<p><strong>Etapa 2 — Modelagem:</strong> Implementação das classes Java com POO. Classe abstrata <code class="code-inline">Pessoa</code> como base.</p>
+<p><strong>Etapa 3 — Banco de Dados:</strong> Criação das tabelas no SQLite. Implementação da classe <code class="code-inline">Conexao.java</code>.</p>
+<p><strong>Etapa 4 — Camada de Operações:</strong> Classes CRUD com PreparedStatement para segurança contra SQL Injection.</p>
+<p><strong>Etapa 5 — Interface CLI:</strong> Menu interativo em <code class="code-inline">Main.java</code> com submenus para cada entidade.</p>
+<p><strong>Etapa 6 — Servidor Web:</strong> API REST com <code class="code-inline">ApiServer.java</code> usando HttpServer nativo do JDK.</p>
+<p><strong>Etapa 7 — Interface Web:</strong> Frontend com HTML, CSS e JavaScript puro.</p>
+<p><strong>Etapa 8 — Integração e Testes:</strong> Testes de fluxo completo e correções de bugs.</p>
+
+<h2>8. Estrutura do Código</h2>
+<div class="tree">ACADEMY-POO-PROJECT/
+├── backend/
+│   ├── pom.xml                          # Configuração Maven
+│   └── src/main/java/
+│       ├── banco/
+│       │   └── Conexao.java             # Conexão com SQLite
+│       ├── entidades/
+│       │   ├── Pessoa.java              # Classe abstrata base
+│       │   ├── Aluno.java               # Subclasse de Pessoa
+│       │   ├── Instrutor.java           # Subclasse de Pessoa
+│       │   ├── Plano.java               # Entidade independente
+│       │   ├── Pagamento.java           # Registro financeiro
+│       │   └── Matricula.java           # Relacionamento Aluno ↔ Plano
+│       ├── operacoes/
+│       │   ├── AlunoOperacoes.java      # CRUD do Aluno
+│       │   └── ... (outros CRUDs)
+│       └── org/example/
+│           ├── Main.java                # Interface CLI
+│           └── ApiServer.java           # API REST
+├── frontend/
+│   ├── index.html                       # Página principal
+│   ├── styles.css                       # Estilos CSS
+│   └── app.js                           # Lógica JavaScript</div>
+
+<h2>9. Código-Fonte Comentado</h2>
+
+<h3>9.1. Conexão com SQLite (Conexao.java)</h3>
+<pre><code>package banco;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+
+public class Conexao {
+    // String de conexão aponta para um arquivo local "academy.db"
+    private static final String URL = "jdbc:sqlite:academy.db";
+
+    public static Connection conectar() {
+        try {
+            return DriverManager.getConnection(URL);
+        } catch (Exception erro) {
+            throw new RuntimeException("Erro ao conectar: " + erro.getMessage());
+        }
+    }
+}</code></pre>
+
+<h3>9.2. Classe Abstrata (Pessoa.java)</h3>
+<pre><code>// Classe abstrata base
+public abstract class Pessoa {
+    protected String nome;
+    protected String cpf;
+
+    public Pessoa(String nome, String cpf) {
+        this.nome = nome;
+        this.cpf = cpf;
+    }
+
+    // Implementação abstrata
+    public abstract String getDescricao();
+}</code></pre>
+
+<h3>9.3. Classe Filha (Aluno.java)</h3>
+<pre><code>// Subclasse de Pessoa
+public class Aluno extends Pessoa {
+    private double peso;
+    private double altura;
+
+    public Aluno(String nome, String cpf, double peso, double altura) {
+        super(nome, cpf);
+        this.peso = peso;
+        this.altura = altura;
+    }
+
+    @Override
+    public String getDescricao() {
+        return "Aluno " + nome + " | IMC: " + (peso / (altura * altura));
+    }
+}</code></pre>
+
+<h2>10. Funcionamento e Testes</h2>
+<p>O sistema permite criar, ler, atualizar e deletar informações de todas as entidades. Como utilizamos o <strong>SQLite</strong>, todos os dados são salvos no arquivo local <code class="code-inline">academy.db</code>.</p>
+<table>
+<tr><th>Operação</th><th>Entrada</th><th>Processo</th><th>Saída</th></tr>
+<tr><td>Cadastrar Aluno</td><td>Nome, CPF, Email</td><td>INSERT no SQLite</td><td>"Aluno cadastrado!"</td></tr>
+<tr><td>Editar Plano</td><td>Novo valor</td><td>UPDATE no SQLite</td><td>"Plano atualizado!"</td></tr>
+<tr><td>Apagar Pagamento</td><td>ID do pagamento</td><td>DELETE no SQLite</td><td>"Pagamento apagado!"</td></tr>
+</table>
+
+<h2>11. Conclusão</h2>
+<p>O projeto foi concluído com sucesso e atinge todos os requisitos do Trabalho Prático. A mudança final de PostgreSQL para <strong>SQLite</strong> tornou o software 100% portátil, podendo ser executado via arquivo <code class="code-inline">.jar</code> em qualquer computador sem necessidade de instalações adicionais, garantindo uma demonstração fluida e segura.</p>
+
+<hr>
+<p style="text-align:center;color:#888;font-size:11px;margin-top:20px"><em>Documento gerado como parte do Trabalho Prático de Programação Orientada a Objetos.</em></p>
+
+</body>
+</html>
