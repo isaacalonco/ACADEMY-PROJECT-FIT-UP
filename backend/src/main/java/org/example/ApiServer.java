@@ -38,8 +38,10 @@ public class ApiServer {
     private static final PagamentoOperacoes pagamentoOps = new PagamentoOperacoes();
 
     private static final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(LocalDate.class, (JsonSerializer<LocalDate>) (src, t, ctx) -> new JsonPrimitive(src.toString()))
-            .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>) (json, t, ctx) -> LocalDate.parse(json.getAsString()))
+            .registerTypeAdapter(LocalDate.class,
+                    (JsonSerializer<LocalDate>) (src, t, ctx) -> new JsonPrimitive(src.toString()))
+            .registerTypeAdapter(LocalDate.class,
+                    (JsonDeserializer<LocalDate>) (json, t, ctx) -> LocalDate.parse(json.getAsString()))
             .create();
 
     public static void start() {
@@ -65,7 +67,9 @@ public class ApiServer {
         ex.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
         byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
         ex.sendResponseHeaders(code, bytes.length);
-        try (OutputStream os = ex.getResponseBody()) { os.write(bytes); }
+        try (OutputStream os = ex.getResponseBody()) {
+            os.write(bytes);
+        }
     }
 
     private static boolean handleCors(HttpExchange ex) throws IOException {
@@ -82,29 +86,47 @@ public class ApiServer {
     // Extrai o ID da URL: /api/alunos/5 -> 5
     private static int extractId(String path, String base) {
         String rest = path.replace(base, "").replace("/", "");
-        if (rest.isEmpty()) return -1;
-        try { return Integer.parseInt(rest); } catch (Exception e) { return -1; }
+        if (rest.isEmpty())
+            return -1;
+        try {
+            return Integer.parseInt(rest);
+        } catch (Exception e) {
+            return -1;
+        }
     }
 
     // Handler genérico que despacha para cada entidade
     static class CrudHandler implements HttpHandler {
         private final String entity;
-        CrudHandler(String entity) { this.entity = entity; }
+
+        CrudHandler(String entity) {
+            this.entity = entity;
+        }
 
         @Override
         public void handle(HttpExchange ex) throws IOException {
-            if (handleCors(ex)) return;
+            if (handleCors(ex))
+                return;
             String method = ex.getRequestMethod().toUpperCase();
             String path = ex.getRequestURI().getPath();
             int id = extractId(path, "/api/" + entity);
 
             try {
                 switch (method) {
-                    case "GET":    handleGet(ex); break;
-                    case "POST":   handlePost(ex); break;
-                    case "PUT":    handlePut(ex, id); break;
-                    case "DELETE": handleDelete(ex, id); break;
-                    default: ex.sendResponseHeaders(405, -1);
+                    case "GET":
+                        handleGet(ex);
+                        break;
+                    case "POST":
+                        handlePost(ex);
+                        break;
+                    case "PUT":
+                        handlePut(ex, id);
+                        break;
+                    case "DELETE":
+                        handleDelete(ex, id);
+                        break;
+                    default:
+                        ex.sendResponseHeaders(405, -1);
                 }
             } catch (Exception e) {
                 sendJson(ex, 500, "{\"erro\":\"" + e.getMessage() + "\"}");
@@ -114,12 +136,23 @@ public class ApiServer {
         private void handleGet(HttpExchange ex) throws IOException {
             String json;
             switch (entity) {
-                case "alunos": json = gson.toJson(alunoOps.listarAlunos()); break;
-                case "instrutores": json = gson.toJson(instrutorOps.listarInstrutores()); break;
-                case "planos": json = gson.toJson(planoOps.listarPlanos()); break;
-                case "matriculas": json = gson.toJson(matriculaOps.listarMatriculas()); break;
-                case "pagamentos": json = gson.toJson(pagamentoOps.listarPagamentos()); break;
-                default: json = "[]";
+                case "alunos":
+                    json = gson.toJson(alunoOps.listarAlunos());
+                    break;
+                case "instrutores":
+                    json = gson.toJson(instrutorOps.listarInstrutores());
+                    break;
+                case "planos":
+                    json = gson.toJson(planoOps.listarPlanos());
+                    break;
+                case "matriculas":
+                    json = gson.toJson(matriculaOps.listarMatriculas());
+                    break;
+                case "pagamentos":
+                    json = gson.toJson(pagamentoOps.listarPagamentos());
+                    break;
+                default:
+                    json = "[]";
             }
             sendJson(ex, 200, json);
         }
@@ -130,8 +163,10 @@ public class ApiServer {
             switch (entity) {
                 case "alunos":
                     Aluno a = gson.fromJson(body, Aluno.class);
-                    if (a.getDataNascimento() == null) a.setDataNascimento(LocalDate.now());
-                    if (a.getDataCadastro() == null) a.setDataCadastro(LocalDate.now());
+                    if (a.getDataNascimento() == null)
+                        a.setDataNascimento(LocalDate.now());
+                    if (a.getDataCadastro() == null)
+                        a.setDataCadastro(LocalDate.now());
                     a.setAtivo(true);
                     ok = alunoOps.cadastrarAluno(a);
                     break;
@@ -152,7 +187,10 @@ public class ApiServer {
         }
 
         private void handlePut(HttpExchange ex, int id) throws IOException {
-            if (id < 0) { sendJson(ex, 400, "{\"erro\":\"ID inválido\"}"); return; }
+            if (id < 0) {
+                sendJson(ex, 400, "{\"erro\":\"ID inválido\"}");
+                return;
+            }
             String body = new String(ex.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
             boolean ok = false;
             switch (entity) {
@@ -162,7 +200,8 @@ public class ApiServer {
                     ok = alunoOps.atualizarAluno(a);
                     // Se veio idPlano no body, atualiza matrícula também
                     try {
-                        com.google.gson.JsonObject jsonObj = com.google.gson.JsonParser.parseString(body).getAsJsonObject();
+                        com.google.gson.JsonObject jsonObj = com.google.gson.JsonParser.parseString(body)
+                                .getAsJsonObject();
                         if (jsonObj.has("idPlano") && !jsonObj.get("idPlano").isJsonNull()) {
                             int idPlano = jsonObj.get("idPlano").getAsInt();
                             if (idPlano > 0) {
@@ -171,11 +210,13 @@ public class ApiServer {
                                 matriculaOps.deletarPorAluno(id);
                             }
                         }
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
                     break;
                 case "instrutores":
                     Instrutor i = gson.fromJson(body, Instrutor.class);
-                    Instrutor instrUpdate = new Instrutor(id, i.getNome(), i.getCpf(), i.getEmail(), i.getTelefone(), i.getEspecialidade());
+                    Instrutor instrUpdate = new Instrutor(id, i.getNome(), i.getCpf(), i.getEmail(), i.getTelefone(),
+                            i.getEspecialidade());
                     ok = instrutorOps.atualizarInstrutor(instrUpdate);
                     break;
                 case "planos":
@@ -193,13 +234,24 @@ public class ApiServer {
         }
 
         private void handleDelete(HttpExchange ex, int id) throws IOException {
-            if (id < 0) { sendJson(ex, 400, "{\"erro\":\"ID inválido\"}"); return; }
+            if (id < 0) {
+                sendJson(ex, 400, "{\"erro\":\"ID inválido\"}");
+                return;
+            }
             boolean ok = false;
             switch (entity) {
-                case "alunos": ok = alunoOps.deletarAluno(id); break;
-                case "instrutores": ok = instrutorOps.deletarInstrutor(id); break;
-                case "planos": ok = planoOps.deletarPlano(id); break;
-                case "pagamentos": ok = pagamentoOps.deletarPagamento(id); break;
+                case "alunos":
+                    ok = alunoOps.deletarAluno(id);
+                    break;
+                case "instrutores":
+                    ok = instrutorOps.deletarInstrutor(id);
+                    break;
+                case "planos":
+                    ok = planoOps.deletarPlano(id);
+                    break;
+                case "pagamentos":
+                    ok = pagamentoOps.deletarPagamento(id);
+                    break;
             }
             sendJson(ex, ok ? 200 : 400, "{\"sucesso\":" + ok + "}");
         }
@@ -209,23 +261,33 @@ public class ApiServer {
         @Override
         public void handle(HttpExchange ex) throws IOException {
             String path = ex.getRequestURI().getPath();
-            if (path.equals("/")) path = "/index.html";
-            
-            // Tenta achar a pasta frontend de 3 lugares diferentes (IntelliJ, Raiz, ou Pasta Target)
+            if (path.equals("/"))
+                path = "/index.html";
+
             File file = new File("../frontend" + path); // Rodando do IntelliJ (pasta backend)
-            if (!file.exists()) file = new File("frontend" + path); // Rodando da raiz do projeto
-            if (!file.exists()) file = new File("../../frontend" + path); // Rodando da pasta target
-            
+            if (!file.exists())
+                file = new File("frontend" + path); // Rodando da raiz do projeto
+            if (!file.exists())
+                file = new File("../../frontend" + path); // Rodando da pasta target
+
             if (!file.exists() || file.isDirectory()) {
-                String r = "404 - Frontend não encontrado."; ex.sendResponseHeaders(404, r.length());
-                try (OutputStream os = ex.getResponseBody()) { os.write(r.getBytes()); }
+                String r = "404 - Frontend não encontrado.";
+                ex.sendResponseHeaders(404, r.length());
+                try (OutputStream os = ex.getResponseBody()) {
+                    os.write(r.getBytes());
+                }
                 return;
             }
-            if (path.endsWith(".css")) ex.getResponseHeaders().set("Content-Type", "text/css");
-            else if (path.endsWith(".js")) ex.getResponseHeaders().set("Content-Type", "application/javascript");
-            else if (path.endsWith(".html")) ex.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
+            if (path.endsWith(".css"))
+                ex.getResponseHeaders().set("Content-Type", "text/css");
+            else if (path.endsWith(".js"))
+                ex.getResponseHeaders().set("Content-Type", "application/javascript");
+            else if (path.endsWith(".html"))
+                ex.getResponseHeaders().set("Content-Type", "text/html; charset=UTF-8");
             ex.sendResponseHeaders(200, file.length());
-            try (OutputStream os = ex.getResponseBody(); FileInputStream fis = new FileInputStream(file)) { fis.transferTo(os); }
+            try (OutputStream os = ex.getResponseBody(); FileInputStream fis = new FileInputStream(file)) {
+                fis.transferTo(os);
+            }
         }
     }
 }
