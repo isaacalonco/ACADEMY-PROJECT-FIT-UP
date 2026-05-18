@@ -1,4 +1,4 @@
-# 🏋️ Academy System — Sistema de Gestão de Academia
+# FIT UP — Sistema de Gestão de Academia
 
 Sistema completo de gestão de academia desenvolvido em Java com POO e interface Web.
 
@@ -6,21 +6,21 @@ Sistema completo de gestão de academia desenvolvido em Java com POO e interface
 
 ---
 
-## 📋 Pré-requisitos
+## Pré-requisitos
 
 Para rodar o projeto em qualquer computador, você só precisa do:
 
 1. **Java 21** (ou superior) instalado.
    - [Download do Java (Oracle)](https://www.oracle.com/java/technologies/downloads/)
 
-> ⚠️ Após instalar, abra o terminal (Prompt de Comando) e verifique se o Java está configurado corretamente:
+> Após instalar, abra o terminal (Prompt de Comando) e verifique se o Java está configurado corretamente:
 > ```cmd
 > java --version
 > ```
 
 ---
 
-## 🚀 Como Executar na Apresentação
+## Como Executar na Apresentação
 
 O sistema já está pronto para rodar. Basta utilizar o arquivo `.jar` executável.
 
@@ -34,7 +34,7 @@ O sistema já está pronto para rodar. Basta utilizar o arquivo `.jar` executáv
 
 ---
 
-## 🌐 Acessando o Sistema
+## Acessando o Sistema
 
 Após executar o arquivo, o sistema estará disponível em **duas interfaces**:
 
@@ -45,7 +45,7 @@ Após executar o arquivo, o sistema estará disponível em **duas interfaces**:
 
 ---
 
-## 💻 Para Desenvolvedores (Rodando pelo IntelliJ)
+## Para Desenvolvedores (Rodando pelo IntelliJ)
 
 Se você quiser abrir o código e rodar pelo seu ambiente de desenvolvimento:
 
@@ -56,7 +56,7 @@ Se você quiser abrir o código e rodar pelo seu ambiente de desenvolvimento:
 
 ---
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```text
 ACADEMY-POO-PROJECT/

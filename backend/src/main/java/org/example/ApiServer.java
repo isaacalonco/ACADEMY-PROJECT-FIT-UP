@@ -54,7 +54,7 @@ public class ApiServer {
             server.setExecutor(null);
             server.start();
             System.out.println("=========================================");
-            System.out.println(" Servidor Web rodando em: http://localhost:" + PORT);
+            System.out.println(" Servidor Web: http://localhost:" + PORT);
             System.out.println("=========================================");
         } catch (IOException e) {
             System.err.println("Erro ao iniciar servidor: " + e.getMessage());
