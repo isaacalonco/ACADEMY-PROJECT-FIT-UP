@@ -60,7 +60,6 @@ public class MatriculaOperacoes {
         return matriculas;
     }
 
-    // Deleta todas as matrículas de um aluno
     public boolean deletarPorAluno(int idAluno) {
         String sql = "DELETE FROM matricula WHERE id_aluno=?";
         try (Connection conn = Conexao.conectar();
@@ -74,14 +73,12 @@ public class MatriculaOperacoes {
         }
     }
 
-    // Atualiza o plano de um aluno (deleta antiga e cria nova)
     public boolean atualizarPlanoDoAluno(int idAluno, int idPlano) {
         deletarPorAluno(idAluno);
         Matricula m = new Matricula(0, idAluno, idPlano, LocalDate.now());
         return cadastrarMatricula(m);
     }
 
-    // Classe auxiliar para representar matrícula com nomes (JOIN)
     public static class MatriculaView {
         public int idMatricula;
         public int idAluno;

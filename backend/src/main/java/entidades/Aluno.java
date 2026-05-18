@@ -3,9 +3,6 @@ package entidades;
 import java.time.LocalDate;
 import java.time.Period;
 
-/**
- * Classe Aluno
- */
 public class Aluno extends Pessoa {
 
     private int id;
@@ -16,12 +13,10 @@ public class Aluno extends Pessoa {
     private LocalDate dataCadastro;
     private boolean ativo;
 
-    // Construtor vazio (necessário para Gson)
     public Aluno() {
         super();
     }
 
-    // Construtor completo usando super() para chamar o construtor da classe mãe (Pessoa)
     public Aluno(String nome, String cpf, String email,
                  String telefone, String endereco,
                  LocalDate dataNascimento,
@@ -47,7 +42,6 @@ public class Aluno extends Pessoa {
         return "Aluno";
     }
 
-    // Métodos específicos do Aluno (não existem em Pessoa)
     public int getIdade() {
         if (dataNascimento == null) return 0;
         return Period.between(dataNascimento, LocalDate.now()).getYears();
@@ -66,8 +60,6 @@ public class Aluno extends Pessoa {
         else if (imc < 30) return "Sobrepeso";
         else return "Obesidade";
     }
-
-    // Getters e Setters específicos do Aluno
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

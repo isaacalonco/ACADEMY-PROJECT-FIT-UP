@@ -22,17 +22,14 @@ public class Conexao {
 
     public static void inicializarBanco() {
         try (Connection conn = conectar(); Statement stmt = conn.createStatement()) {
-            // Habilita as chaves estrangeiras no SQLite
             stmt.execute("PRAGMA foreign_keys = ON;");
             
-            // Lê o schema.sql que está dentro do resources (ou JAR)
             InputStream in = Conexao.class.getResourceAsStream("/schema.sql");
             if (in == null) return;
             
-            String sql = new BufferedReader(new InputStreamReader(in))
+            String sql = new BufferedReader(new InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8))
                             .lines().collect(Collectors.joining("\n"));
             
-            // Separa os comandos e executa um por um
             String[] comandos = sql.split(";");
             for (String comando : comandos) {
                 if (!comando.trim().isEmpty()) {

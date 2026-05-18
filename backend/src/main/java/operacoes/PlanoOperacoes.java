@@ -55,10 +55,20 @@ public class PlanoOperacoes {
 
     public boolean deletarPlano(int id) {
         String sql = "DELETE FROM plano WHERE id=?";
-        try (Connection conn = Conexao.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
+        String sqlResetSeq = "UPDATE sqlite_sequence SET seq = (SELECT COALESCE(MAX(id), 0) FROM plano) WHERE name = 'plano'";
+        try (Connection conn = Conexao.conectar()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement ps = conn.prepareStatement(sql);
+                 PreparedStatement psReset = conn.prepareStatement(sqlResetSeq)) {
+                ps.setInt(1, id);
+                int res = ps.executeUpdate();
+                psReset.executeUpdate();
+                conn.commit();
+                return res > 0;
+            } catch (Exception e) {
+                conn.rollback();
+                throw e;
+            }
         } catch (Exception e) {
             System.err.println("-> Erro ao deletar plano: " + e.getMessage());
             return false;

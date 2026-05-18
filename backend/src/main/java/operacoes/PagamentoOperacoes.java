@@ -46,10 +46,20 @@ public class PagamentoOperacoes {
 
     public boolean deletarPagamento(int id) {
         String sql = "DELETE FROM pagamento WHERE id_pagamento=?";
-        try (Connection conn = Conexao.conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
+        String sqlResetSeq = "UPDATE sqlite_sequence SET seq = (SELECT COALESCE(MAX(id_pagamento), 0) FROM pagamento) WHERE name = 'pagamento'";
+        try (Connection conn = Conexao.conectar()) {
+            conn.setAutoCommit(false);
+            try (PreparedStatement ps = conn.prepareStatement(sql);
+                 PreparedStatement psReset = conn.prepareStatement(sqlResetSeq)) {
+                ps.setInt(1, id);
+                int res = ps.executeUpdate();
+                psReset.executeUpdate();
+                conn.commit();
+                return res > 0;
+            } catch (Exception e) {
+                conn.rollback();
+                throw e;
+            }
         } catch (Exception e) {
             System.err.println("-> Erro ao deletar pagamento: " + e.getMessage());
             return false;
@@ -57,10 +67,17 @@ public class PagamentoOperacoes {
     }
 
     public boolean atualizarStatusPagamento(int id, String novoStatus) {
+        if (novoStatus == null) return false;
+        String status = novoStatus.trim();
+        if (status.equalsIgnoreCase("Pago")) status = "Pago";
+        else if (status.equalsIgnoreCase("Pendente")) status = "Pendente";
+        else if (status.equalsIgnoreCase("Atrasado")) status = "Atrasado";
+        else return false;
+
         String sql = "UPDATE pagamento SET status=? WHERE id_pagamento=?";
         try (Connection conn = Conexao.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, novoStatus);
+            ps.setString(1, status);
             ps.setInt(2, id);
             return ps.executeUpdate() > 0;
         } catch (Exception e) {

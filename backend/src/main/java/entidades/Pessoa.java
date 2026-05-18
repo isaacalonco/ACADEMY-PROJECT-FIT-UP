@@ -1,8 +1,5 @@
 package entidades;
 
-/**
- * Classe abstrata que representa uma Pessoa genérica no sistema da academia.
- */
 public abstract class Pessoa {
 
     protected String nome;
@@ -10,10 +7,8 @@ public abstract class Pessoa {
     protected String email;
     protected String telefone;
 
-    // Construtor vazio (necessário para o Gson)
     public Pessoa() {}
 
-    // Construtor com parâmetros
     public Pessoa(String nome, String cpf, String email, String telefone) {
         this.nome = nome;
         this.cpf = cpf;
@@ -21,13 +16,10 @@ public abstract class Pessoa {
         this.telefone = telefone;
     }
 
-    // Método abstrato de descrição
     public abstract String getDescricao();
 
-    // Método abstrato — retorna o tipo/papel da pessoa no sistema
     public abstract String getTipo();
 
-    // Getters e Setters comuns
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
 
