@@ -1,8 +1,8 @@
 :root {
     --bg-gradient: #000000;
-    --primary: #FFCC00;
-    --primary-hover: #e6b800;
-    --primary-glow: rgba(255, 204, 0, 0.15);
+    --primary: #b95df7;
+    --primary-hover: #820AD1;
+    --primary-glow: rgba(247, 0, 255, 0.15);
     --text-primary: #FFFFFF;
     --text-secondary: #F2F2F2;
     --text-muted: #888888;
@@ -10,7 +10,7 @@
     --glass-border: #333333;
     --glass-hover: #262626;
     --success: #059669;
-    --warning: #d97706;
+    --warning: #291735;
     --danger: #dc2626;
     --info: #0284c7;
     --radius: 12px;
