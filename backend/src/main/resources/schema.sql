@@ -1,5 +1,4 @@
 -- Criação das tabelas para o banco de dados 'academy' (SQLite)
--- Este script roda automaticamente via Conexao.java ao iniciar.
 
 CREATE TABLE IF NOT EXISTS aluno (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

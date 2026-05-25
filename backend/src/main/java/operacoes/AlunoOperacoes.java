@@ -1,6 +1,7 @@
 package operacoes;
 
 import banco.Conexao;
+import banco.DbUtil;
 import entidades.Aluno;
 
 import java.sql.Connection;
@@ -13,7 +14,48 @@ import java.util.List;
 
 public class AlunoOperacoes {
 
+    private String ultimoErro;
+
+    public String getUltimoErro() {
+        return ultimoErro;
+    }
+
+    public boolean cpfJaCadastrado(String cpf, int ignoreId) {
+        try (Connection conn = Conexao.conectar()) {
+            return DbUtil.cpfJaCadastrado(conn, "aluno", "cpf", cpf, ignoreId);
+        } catch (Exception e) {
+            System.err.println("-> Erro ao verificar CPF: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean emailJaCadastrado(String email, int ignoreId) {
+        String sql = "SELECT COUNT(*) FROM aluno WHERE email = ? AND id != ?";
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setInt(2, ignoreId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            System.err.println("-> Erro ao verificar e-mail: " + e.getMessage());
+            return false;
+        }
+    }
+
     public boolean cadastrarAluno(Aluno aluno) {
+        ultimoErro = null;
+        if (cpfJaCadastrado(aluno.getCpf(), 0)) {
+            ultimoErro = "CPF já cadastrado no sistema!";
+            System.err.println("-> " + ultimoErro);
+            return false;
+        }
+        if (emailJaCadastrado(aluno.getEmail(), 0)) {
+            ultimoErro = "E-mail já cadastrado no sistema!";
+            System.err.println("-> " + ultimoErro);
+            return false;
+        }
         String sql = "INSERT INTO aluno (nome, cpf, email, telefone, endereco, data_nascimento, peso, altura, data_cadastro, ativo) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = Conexao.conectar();
@@ -29,15 +71,9 @@ public class AlunoOperacoes {
             ps.setDate(9, Date.valueOf(aluno.getDataCadastro() != null ? aluno.getDataCadastro() : LocalDate.now()));
             ps.setBoolean(10, aluno.isAtivo());
             return ps.executeUpdate() > 0;
-        } catch (java.sql.SQLException e) {
-            if (e.getSQLState() != null && e.getSQLState().equals("23505")) {
-                System.err.println("-> CPF já cadastrado no sistema!");
-            } else {
-                System.err.println("-> Erro ao cadastrar aluno: " + e.getMessage());
-            }
-            return false;
         } catch (Exception e) {
-            System.err.println("-> Erro ao cadastrar aluno: " + e.getMessage());
+            ultimoErro = "Erro ao cadastrar aluno: " + e.getMessage();
+            System.err.println("-> " + ultimoErro);
             return false;
         }
     }
@@ -70,6 +106,17 @@ public class AlunoOperacoes {
     }
 
     public boolean atualizarAluno(Aluno aluno) {
+        ultimoErro = null;
+        if (cpfJaCadastrado(aluno.getCpf(), aluno.getId())) {
+            ultimoErro = "CPF já pertence a outro aluno!";
+            System.err.println("-> " + ultimoErro);
+            return false;
+        }
+        if (emailJaCadastrado(aluno.getEmail(), aluno.getId())) {
+            ultimoErro = "E-mail já pertence a outro aluno!";
+            System.err.println("-> " + ultimoErro);
+            return false;
+        }
         String sql = "UPDATE aluno SET nome=?, cpf=?, email=?, telefone=?, endereco=?, data_nascimento=?, peso=?, altura=?, ativo=? WHERE id=?";
         try (Connection conn = Conexao.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -85,23 +132,19 @@ public class AlunoOperacoes {
             ps.setInt(10, aluno.getId());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
-            System.err.println("-> Erro ao atualizar aluno: " + e.getMessage());
+            ultimoErro = "Erro ao atualizar aluno: " + e.getMessage();
+            System.err.println("-> " + ultimoErro);
             return false;
         }
     }
 
     public boolean deletarAluno(int id) {
-        String sql = "DELETE FROM aluno WHERE id=?";
-        String sqlResetSeq = "UPDATE sqlite_sequence SET seq = (SELECT COALESCE(MAX(id), 0) FROM aluno) WHERE name = 'aluno'";
         try (Connection conn = Conexao.conectar()) {
             conn.setAutoCommit(false);
-            try (PreparedStatement ps = conn.prepareStatement(sql);
-                 PreparedStatement psReset = conn.prepareStatement(sqlResetSeq)) {
-                ps.setInt(1, id);
-                int res = ps.executeUpdate();
-                psReset.executeUpdate();
+            try {
+                boolean result = DbUtil.deletarEResetarSeq(conn, "aluno", "id", id);
                 conn.commit();
-                return res > 0;
+                return result;
             } catch (Exception e) {
                 conn.rollback();
                 throw e;

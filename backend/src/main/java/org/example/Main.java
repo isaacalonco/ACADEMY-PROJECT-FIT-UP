@@ -12,7 +12,6 @@ import operacoes.PagamentoOperacoes;
 import operacoes.MatriculaOperacoes;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -37,8 +36,9 @@ public class Main {
             for (int i = 0; i < 50; i++)
                 System.out.println();
         }
-        System.out.println("Servidor Web Ativo: http://localhost:8080");
-        System.out.println("══════════════════════════════════════════");
+        System.out.println("\n╔═════════════════════════════════════╗");
+        System.out.println("║ Servidor Web: http://localhost:8080 ║");
+        System.out.println("╚═════════════════════════════════════╝");
     }
 
     public static void main(String[] args) {
@@ -49,7 +49,7 @@ public class Main {
         while (opcao != 0) {
             clearScreen();
             System.out.println("\n╔════════════════════════════════╗");
-            System.out.println("║        SISTEMA ACADEMY         ║");
+            System.out.println("║         SISTEMA FIT UP         ║");
             System.out.println("╠════════════════════════════════╣");
             System.out.println("║ 1 - Alunos                     ║");
             System.out.println("║ 2 - Instrutores                ║");
@@ -89,13 +89,16 @@ public class Main {
         int op = -1;
         while (op != 0) {
             clearScreen();
-            System.out.println("\n--- ALUNOS ---");
-            System.out.println("1 - Cadastrar Aluno");
-            System.out.println("2 - Listar Alunos");
-            System.out.println("3 - Apagar Aluno");
-            System.out.println("4 - Vincular/Trocar Plano");
-            System.out.println("5 - Editar Aluno");
-            System.out.println("0 - Voltar");
+            System.out.println("\n╔════════════════════════════════╗");
+            System.out.println("║             ALUNOS             ║");
+            System.out.println("╠════════════════════════════════╣");
+            System.out.println("║ 1 - Cadastrar Aluno            ║");
+            System.out.println("║ 2 - Listar Alunos              ║");
+            System.out.println("║ 3 - Apagar Aluno               ║");
+            System.out.println("║ 4 - Vincular/Trocar Plano      ║");
+            System.out.println("║ 5 - Editar Aluno               ║");
+            System.out.println("║ 0 - Voltar                     ║");
+            System.out.println("╚════════════════════════════════╝");
             System.out.print("Escolha: ");
             op = lerInt();
 
@@ -105,21 +108,30 @@ public class Main {
                     String nome = scanner.nextLine();
                     System.out.print("CPF: ");
                     String cpf = scanner.nextLine();
+                    String cpfFormatado = Validador.formatarCpf(cpf);
+                    if (!cpfFormatado.isEmpty() && !cpfFormatado.equals(cpf)) {
+                        System.out.println("   -> " + cpfFormatado);
+                        cpf = cpfFormatado;
+                    }
                     System.out.print("Email: ");
                     String email = scanner.nextLine();
                     System.out.print("Telefone: ");
                     String tel = scanner.nextLine();
+                    String telFormatado = Validador.formatarTelefone(tel);
+                    if (!telFormatado.isEmpty() && !telFormatado.equals(tel)) {
+                        System.out.println("   -> " + telFormatado);
+                        tel = telFormatado;
+                    }
                     System.out.print("Endereço: ");
                     String end = scanner.nextLine();
-                    System.out.print("Data Nascimento (DD/MM/AAAA): ");
-                    String dataStr = scanner.nextLine();
-                    LocalDate dataNasc = parseDate(dataStr);
+                    LocalDate dataNasc = lerData("Data Nascimento (DD/MM/AAAA): ");
                     System.out.print("Peso (kg): ");
                     double peso = lerDouble();
                     System.out.print("Altura (m): ");
                     double altura = lerDouble();
 
                     Aluno novoAluno = new Aluno(nome, cpf, email, tel, end, dataNasc, peso, altura);
+                    Validador.normalizarAluno(novoAluno);
                     String erroAluno = Validador.validarAluno(novoAluno);
                     if (erroAluno != null) {
                         System.out.println("-> Erro de validação: " + erroAluno);
@@ -227,15 +239,23 @@ public class Main {
                         String novoNome = scanner.nextLine();
                         System.out.print("Novo CPF: ");
                         String novoCpf = scanner.nextLine();
+                        String editCpfFormatado = Validador.formatarCpf(novoCpf);
+                        if (!editCpfFormatado.isEmpty() && !editCpfFormatado.equals(novoCpf)) {
+                            System.out.println("   -> " + editCpfFormatado);
+                            novoCpf = editCpfFormatado;
+                        }
                         System.out.print("Novo Email: ");
                         String novoEmail = scanner.nextLine();
                         System.out.print("Novo Telefone: ");
                         String novoTel = scanner.nextLine();
+                        String editTelFormatado = Validador.formatarTelefone(novoTel);
+                        if (!editTelFormatado.isEmpty() && !editTelFormatado.equals(novoTel)) {
+                            System.out.println("   -> " + editTelFormatado);
+                            novoTel = editTelFormatado;
+                        }
                         System.out.print("Novo Endereço: ");
                         String novoEnd = scanner.nextLine();
-                        System.out.print("Nova Data Nascimento (DD/MM/AAAA): ");
-                        String novaDataStr = scanner.nextLine();
-                        LocalDate novaDataNasc = parseDate(novaDataStr);
+                        LocalDate novaDataNasc = lerData("Nova Data Nascimento (DD/MM/AAAA): ");
                         System.out.print("Novo Peso (kg): ");
                         double novoPeso = lerDouble();
                         System.out.print("Nova Altura (m): ");
@@ -244,6 +264,7 @@ public class Main {
                         Aluno alunoEditado = new Aluno(novoNome, novoCpf, novoEmail, novoTel, novoEnd, novaDataNasc,
                                 novoPeso, novaAltura);
                         alunoEditado.setId(idEditAluno);
+                        Validador.normalizarAluno(alunoEditado);
                         String erroEditAluno = Validador.validarAluno(alunoEditado);
                         if (erroEditAluno != null) {
                             System.out.println("-> Erro de validação: " + erroEditAluno);
@@ -265,12 +286,15 @@ public class Main {
         int op = -1;
         while (op != 0) {
             clearScreen();
-            System.out.println("\n--- INSTRUTORES ---");
-            System.out.println("1 - Cadastrar Instrutor");
-            System.out.println("2 - Listar Instrutores");
-            System.out.println("3 - Apagar Instrutor");
-            System.out.println("4 - Editar Instrutor");
-            System.out.println("0 - Voltar");
+            System.out.println("\n╔════════════════════════════════╗");
+            System.out.println("║          INSTRUTORES           ║");
+            System.out.println("╠════════════════════════════════╣");
+            System.out.println("║ 1 - Cadastrar Instrutor        ║");
+            System.out.println("║ 2 - Listar Instrutores         ║");
+            System.out.println("║ 3 - Apagar Instrutor           ║");
+            System.out.println("║ 4 - Editar Instrutor           ║");
+            System.out.println("║ 0 - Voltar                     ║");
+            System.out.println("╚════════════════════════════════╝");
             System.out.print("Escolha: ");
             op = lerInt();
 
@@ -280,14 +304,25 @@ public class Main {
                     String nome = scanner.nextLine();
                     System.out.print("CPF: ");
                     String cpf = scanner.nextLine();
+                    String cpfFormatado = Validador.formatarCpf(cpf);
+                    if (!cpfFormatado.isEmpty() && !cpfFormatado.equals(cpf)) {
+                        System.out.println("   -> " + cpfFormatado);
+                        cpf = cpfFormatado;
+                    }
                     System.out.print("Email: ");
                     String email = scanner.nextLine();
                     System.out.print("Telefone: ");
                     String tel = scanner.nextLine();
+                    String telFormatado = Validador.formatarTelefone(tel);
+                    if (!telFormatado.isEmpty() && !telFormatado.equals(tel)) {
+                        System.out.println("   -> " + telFormatado);
+                        tel = telFormatado;
+                    }
                     System.out.print("Especialidade: ");
                     String esp = scanner.nextLine();
 
                     Instrutor novoInst = new Instrutor(0, nome, cpf, email, tel, esp);
+                    Validador.normalizarInstrutor(novoInst);
                     String erroInst = Validador.validarInstrutor(novoInst);
                     if (erroInst != null) {
                         System.out.println("-> Erro de validação: " + erroInst);
@@ -353,14 +388,25 @@ public class Main {
                         String nNome = scanner.nextLine();
                         System.out.print("Novo CPF: ");
                         String nCpf = scanner.nextLine();
+                        String editCpfFormatadoInst = Validador.formatarCpf(nCpf);
+                        if (!editCpfFormatadoInst.isEmpty() && !editCpfFormatadoInst.equals(nCpf)) {
+                            System.out.println("   -> " + editCpfFormatadoInst);
+                            nCpf = editCpfFormatadoInst;
+                        }
                         System.out.print("Novo Email: ");
                         String nEmail = scanner.nextLine();
                         System.out.print("Novo Telefone: ");
                         String nTel = scanner.nextLine();
+                        String editTelFormatadoInst = Validador.formatarTelefone(nTel);
+                        if (!editTelFormatadoInst.isEmpty() && !editTelFormatadoInst.equals(nTel)) {
+                            System.out.println("   -> " + editTelFormatadoInst);
+                            nTel = editTelFormatadoInst;
+                        }
                         System.out.print("Nova Especialidade: ");
                         String nEsp = scanner.nextLine();
 
                         Instrutor instrutorEditado = new Instrutor(idEditInst, nNome, nCpf, nEmail, nTel, nEsp);
+                        Validador.normalizarInstrutor(instrutorEditado);
                         String erroEditInst = Validador.validarInstrutor(instrutorEditado);
                         if (erroEditInst != null) {
                             System.out.println("-> Erro de validação: " + erroEditInst);
@@ -382,12 +428,15 @@ public class Main {
         int op = -1;
         while (op != 0) {
             clearScreen();
-            System.out.println("\n--- PLANOS ---");
-            System.out.println("1 - Cadastrar Plano");
-            System.out.println("2 - Listar Planos");
-            System.out.println("3 - Apagar Plano");
-            System.out.println("4 - Editar Plano");
-            System.out.println("0 - Voltar");
+            System.out.println("\n╔════════════════════════════════╗");
+            System.out.println("║             PLANOS             ║");
+            System.out.println("╠════════════════════════════════╣");
+            System.out.println("║ 1 - Cadastrar Plano            ║");
+            System.out.println("║ 2 - Listar Planos              ║");
+            System.out.println("║ 3 - Apagar Plano               ║");
+            System.out.println("║ 4 - Editar Plano               ║");
+            System.out.println("║ 0 - Voltar                     ║");
+            System.out.println("╚════════════════════════════════╝");
             System.out.print("Escolha: ");
             op = lerInt();
 
@@ -483,12 +532,15 @@ public class Main {
         int op = -1;
         while (op != 0) {
             clearScreen();
-            System.out.println("\n--- PAGAMENTOS ---");
-            System.out.println("1 - Registrar Pagamento");
-            System.out.println("2 - Listar Pagamentos");
-            System.out.println("3 - Apagar Pagamento");
-            System.out.println("4 - Atualizar Status de Pagamento");
-            System.out.println("0 - Voltar");
+            System.out.println("\n╔════════════════════════════════╗");
+            System.out.println("║          PAGAMENTOS            ║");
+            System.out.println("╠════════════════════════════════╣");
+            System.out.println("║ 1 - Registrar Pagamento        ║");
+            System.out.println("║ 2 - Listar Pagamentos          ║");
+            System.out.println("║ 3 - Apagar Pagamento           ║");
+            System.out.println("║ 4 - Atualizar Status Pagamento ║");
+            System.out.println("║ 0 - Voltar                     ║");
+            System.out.println("╚════════════════════════════════╝");
             System.out.print("Escolha: ");
             op = lerInt();
 
@@ -639,12 +691,18 @@ public class Main {
         }
     }
 
-    static LocalDate parseDate(String str) {
-        try {
-            return LocalDate.parse(str, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        } catch (Exception e) {
-            System.out.println("Data inválida, usando data atual.");
-            return LocalDate.now();
+    static LocalDate lerData(String prompt) {
+        System.out.print(prompt);
+        String str = scanner.nextLine();
+        LocalDate data = Validador.parseDataBr(str);
+        if (data == null) {
+            if (!str.isBlank()) {
+                System.out.println("Data inválida, usando data atual.");
+            }
+            data = LocalDate.now();
+        } else {
+            System.out.println("   -> " + Validador.formatarDataBr(data));
         }
+        return data;
     }
 }

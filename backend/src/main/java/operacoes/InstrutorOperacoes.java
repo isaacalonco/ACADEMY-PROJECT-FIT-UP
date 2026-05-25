@@ -1,6 +1,7 @@
 package operacoes;
 
 import banco.Conexao;
+import banco.DbUtil;
 import entidades.Instrutor;
 
 import java.sql.Connection;
@@ -11,7 +12,34 @@ import java.util.List;
 
 public class InstrutorOperacoes {
 
+    private String ultimoErro;
+
+    public String getUltimoErro() {
+        return ultimoErro;
+    }
+
+    public boolean cpfJaCadastrado(String cpf, int ignoreId) {
+        String sql = "SELECT COUNT(*) FROM instrutor WHERE cpf = ? AND id_instrutor != ?";
+        try (Connection conn = Conexao.conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, cpf);
+            ps.setInt(2, ignoreId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            System.err.println("-> Erro ao verificar CPF: " + e.getMessage());
+            return false;
+        }
+    }
+
     public boolean cadastrarInstrutor(Instrutor i) {
+        ultimoErro = null;
+        if (cpfJaCadastrado(i.getCpf(), 0)) {
+            ultimoErro = "CPF já cadastrado no sistema!";
+            System.err.println("-> " + ultimoErro);
+            return false;
+        }
         String sql = "INSERT INTO instrutor (nome, cpf, email, telefone, especialidade) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = Conexao.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -22,7 +50,8 @@ public class InstrutorOperacoes {
             ps.setString(5, i.getEspecialidade());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
-            System.err.println("-> Erro ao cadastrar instrutor: " + e.getMessage());
+            ultimoErro = "Erro ao cadastrar instrutor: " + e.getMessage();
+            System.err.println("-> " + ultimoErro);
             return false;
         }
     }
@@ -51,6 +80,12 @@ public class InstrutorOperacoes {
     }
 
     public boolean atualizarInstrutor(Instrutor i) {
+        ultimoErro = null;
+        if (cpfJaCadastrado(i.getCpf(), i.getIdInstrutor())) {
+            ultimoErro = "CPF já pertence a outro instrutor!";
+            System.err.println("-> " + ultimoErro);
+            return false;
+        }
         String sql = "UPDATE instrutor SET nome=?, cpf=?, email=?, telefone=?, especialidade=? WHERE id_instrutor=?";
         try (Connection conn = Conexao.conectar();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -62,23 +97,19 @@ public class InstrutorOperacoes {
             ps.setInt(6, i.getIdInstrutor());
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
-            System.err.println("-> Erro ao atualizar instrutor: " + e.getMessage());
+            ultimoErro = "Erro ao atualizar instrutor: " + e.getMessage();
+            System.err.println("-> " + ultimoErro);
             return false;
         }
     }
 
     public boolean deletarInstrutor(int id) {
-        String sql = "DELETE FROM instrutor WHERE id_instrutor=?";
-        String sqlResetSeq = "UPDATE sqlite_sequence SET seq = (SELECT COALESCE(MAX(id_instrutor), 0) FROM instrutor) WHERE name = 'instrutor'";
         try (Connection conn = Conexao.conectar()) {
             conn.setAutoCommit(false);
-            try (PreparedStatement ps = conn.prepareStatement(sql);
-                 PreparedStatement psReset = conn.prepareStatement(sqlResetSeq)) {
-                ps.setInt(1, id);
-                int res = ps.executeUpdate();
-                psReset.executeUpdate();
+            try {
+                boolean result = DbUtil.deletarEResetarSeq(conn, "instrutor", "id_instrutor", id);
                 conn.commit();
-                return res > 0;
+                return result;
             } catch (Exception e) {
                 conn.rollback();
                 throw e;

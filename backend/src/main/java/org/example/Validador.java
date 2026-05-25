@@ -5,12 +5,89 @@ import entidades.Instrutor;
 import entidades.Plano;
 import entidades.Pagamento;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Validador {
 
+    private static final DateTimeFormatter FMT_BR = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    public static String somenteDigitos(String s) {
+        return s == null ? "" : s.replaceAll("\\D", "");
+    }
+
+    public static String formatarCpf(String cpf) {
+        String d = somenteDigitos(cpf);
+        if (d.length() != 11) return cpf != null ? cpf : "";
+        return d.substring(0, 3) + "." + d.substring(3, 6) + "."
+             + d.substring(6, 9) + "-" + d.substring(9, 11);
+    }
+
+    public static String formatarTelefone(String tel) {
+        String d = somenteDigitos(tel);
+        if (d.length() == 11) {
+            return "(" + d.substring(0, 2) + ") " + d.substring(2, 7) + "-" + d.substring(7);
+        } else if (d.length() == 10) {
+            return "(" + d.substring(0, 2) + ") " + d.substring(2, 6) + "-" + d.substring(6);
+        }
+        return tel != null ? tel : "";
+    }
+
+    public static String formatarDataBr(String data) {
+        if (data == null || data.isBlank()) return "";
+        try {
+            return LocalDate.parse(data).format(FMT_BR);
+        } catch (DateTimeParseException e) {
+            return data;
+        }
+    }
+
+    public static String formatarDataBr(LocalDate data) {
+        return data == null ? "" : data.format(FMT_BR);
+    }
+
+    public static LocalDate parseDataBr(String data) {
+        if (data == null || data.isBlank()) return null;
+        String limpo = somenteDigitos(data);
+        if (limpo.length() == 8) {
+            data = limpo.substring(0, 2) + "/" + limpo.substring(2, 4) + "/" + limpo.substring(4, 8);
+        }
+        try {
+            return LocalDate.parse(data.trim(), FMT_BR);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+
+    public static void normalizarAluno(Aluno a) {
+        if (a == null) return;
+        if (a.getNome() != null)     a.setNome(a.getNome().trim());
+        if (a.getCpf() != null)      a.setCpf(formatarCpf(a.getCpf()));
+        if (a.getEmail() != null)    a.setEmail(a.getEmail().trim().toLowerCase());
+        if (a.getTelefone() != null) a.setTelefone(formatarTelefone(a.getTelefone()));
+        if (a.getEndereco() != null) a.setEndereco(a.getEndereco().trim());
+    }
+
+    public static void normalizarInstrutor(Instrutor i) {
+        if (i == null) return;
+        if (i.getNome() != null)          i.setNome(i.getNome().trim());
+        if (i.getCpf() != null)           i.setCpf(formatarCpf(i.getCpf()));
+        if (i.getEmail() != null)         i.setEmail(i.getEmail().trim().toLowerCase());
+        if (i.getTelefone() != null)      i.setTelefone(formatarTelefone(i.getTelefone()));
+        if (i.getEspecialidade() != null) i.setEspecialidade(i.getEspecialidade().trim());
+    }
+
+    public static String normalizarStatusPagamento(String status) {
+        if (status == null) return "Pendente";
+        String s = status.trim();
+        if (s.equalsIgnoreCase("Pago"))     return "Pago";
+        if (s.equalsIgnoreCase("Atrasado")) return "Atrasado";
+        return "Pendente";
+    }
+
     public static boolean isCpfValido(String cpf) {
         if (cpf == null) return false;
-        String limpo = cpf.replaceAll("\\D", "");
+        String limpo = somenteDigitos(cpf);
         return limpo.length() == 11;
     }
 

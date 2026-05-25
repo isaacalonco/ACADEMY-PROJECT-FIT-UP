@@ -4,7 +4,7 @@ public class TestaConexao {
 
     public static void main(String[] args) {
         try {
-            System.out.println("Iniciando teste de conexão...");
+            System.out.println("Testando conexão...");
             
             // Tenta chamar o método de conexão
             java.sql.Connection conn = Conexao.conectar();

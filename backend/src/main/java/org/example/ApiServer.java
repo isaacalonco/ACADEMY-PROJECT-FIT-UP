@@ -167,6 +167,7 @@ public class ApiServer {
                     if (a.getDataCadastro() == null)
                         a.setDataCadastro(LocalDate.now());
                     a.setAtivo(true);
+                    Validador.normalizarAluno(a);
                     erroValidacao = Validador.validarAluno(a);
                     if (erroValidacao == null) {
                         ok = alunoOps.cadastrarAluno(a);
@@ -174,6 +175,7 @@ public class ApiServer {
                     break;
                 case "instrutores":
                     Instrutor inst = gson.fromJson(body, Instrutor.class);
+                    Validador.normalizarInstrutor(inst);
                     erroValidacao = Validador.validarInstrutor(inst);
                     if (erroValidacao == null) {
                         ok = instrutorOps.cadastrarInstrutor(inst);
@@ -216,6 +218,7 @@ public class ApiServer {
                 case "alunos":
                     Aluno a = gson.fromJson(body, Aluno.class);
                     a.setId(id);
+                    Validador.normalizarAluno(a);
                     erroValidacao = Validador.validarAluno(a);
                     if (erroValidacao == null) {
                         ok = alunoOps.atualizarAluno(a);
@@ -238,6 +241,7 @@ public class ApiServer {
                     Instrutor i = gson.fromJson(body, Instrutor.class);
                     Instrutor instrUpdate = new Instrutor(id, i.getNome(), i.getCpf(), i.getEmail(), i.getTelefone(),
                             i.getEspecialidade());
+                    Validador.normalizarInstrutor(instrUpdate);
                     erroValidacao = Validador.validarInstrutor(instrUpdate);
                     if (erroValidacao == null) {
                         ok = instrutorOps.atualizarInstrutor(instrUpdate);

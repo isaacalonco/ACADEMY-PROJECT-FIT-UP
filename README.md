@@ -22,15 +22,21 @@ Para rodar o projeto em qualquer computador, você só precisa do:
 
 ## Como Executar na Apresentação
 
-O sistema já está pronto para rodar. Basta utilizar o arquivo `.jar` executável.
+O sistema está pronto para rodar de forma simples e rápida utilizando a pasta de **Release**.
 
-1. Navegue até a pasta `backend/target/`.
-2. Dê um **duplo clique** no arquivo `academy-1.0-SNAPSHOT-jar-with-dependencies.jar` **OU** abra o terminal nessa pasta e digite:
+### Método Recomendado (Via Script de Inicialização):
+1. Navegue até a pasta `FIT-UP-Release-v3.7.2`.
+2. Dê um **duplo clique** no arquivo `iniciar.bat`.
+   - *Este script verifica se você possui o Java instalado, tenta localizar automaticamente o Java do IntelliJ caso necessário, e inicia o sistema de forma automatizada.*
+
+### Método Manual (Via Terminal):
+1. Abra o terminal na pasta `FIT-UP-Release-v3.7.2`.
+2. Execute o comando:
    ```cmd
    java -jar academy-1.0-SNAPSHOT-jar-with-dependencies.jar
    ```
 
-*(O banco de dados `academy.db` será criado automaticamente na pasta de onde você executou o arquivo, na primeira vez que o sistema rodar!)*
+*(O banco de dados `academy.db` já está incluído e configurado na pasta de release).*
 
 ---
 
@@ -60,7 +66,7 @@ Se você quiser abrir o código e rodar pelo seu ambiente de desenvolvimento:
 
 ```text
 ACADEMY-POO-PROJECT/
-├── backend/                    # Código Java
+├── backend/                    # Código Java (Backend)
 │   ├── pom.xml                 
 │   ├── target/                 # Arquivos compilados (.jar)
 │   └── src/main/java/
@@ -68,7 +74,7 @@ ACADEMY-POO-PROJECT/
 │       ├── entidades/          # Classes de domínio (POO: Herança, Polimorfismo)
 │       ├── operacoes/          # Classes de negócio (CRUD)
 │       └── org/example/        # Main + Servidor Web (ApiServer)
-├── frontend/                   # Interface Web (HTML/CSS/JS)
+├── frontend/                   # Código HTML/CSS/JS (Frontend)
 │   ├── index.html
 │   ├── styles.css
 │   └── app.js
