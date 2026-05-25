@@ -3,6 +3,7 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .kotlin
+FIT-UP-Release-v3.7.2
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
