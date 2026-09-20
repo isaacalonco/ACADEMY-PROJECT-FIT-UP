@@ -1,21 +1,3 @@
--- ============================================================================
--- PROJETO FINAL: LABORATÓRIO DE BANCO DE DADOS (GPE17M40083)
--- UNIVERSIDADE CATÓLICA DE BRASÍLIA (UCB) - ENGENHARIA DE SOFTWARE
--- PROFESSOR: Samuel Novais Moura Júnior
--- DOMÍNIO: FIT UP — Sistema de Gestão de Academia com Avaliação Física
--- ARQUIVO: 03_consultas.sql — 15 Consultas de Verificação com Perguntas de Negócio
--- ============================================================================
-
--- ============================================================================
--- CATEGORIA 1: CONSULTAS BÁSICAS (5 Consultas)
--- Requisitos: Projeção, seleção com WHERE, ordenação, LIKE, BETWEEN, IN e NULL
--- ============================================================================
-
--- ----------------------------------------------------------------------------
--- CONSULTA 01 (Básica - WHERE, LIKE e ORDER BY)
--- Pergunta de negócio: "Quais são os alunos cujo nome começa com 'M' ou 'P',
--- ordenados alfabeticamente para facilitar a chamada na recepção?"
--- ----------------------------------------------------------------------------
 SELECT 
     p.id_pessoa,
     p.nome_completo,

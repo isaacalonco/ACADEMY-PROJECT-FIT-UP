@@ -52,8 +52,9 @@ public class ApiServer {
             server.createContext("/api/planos", new CrudHandler("planos"));
             server.createContext("/api/matriculas", new CrudHandler("matriculas"));
             server.createContext("/api/pagamentos", new CrudHandler("pagamentos"));
+            server.createContext("/api/login", new LoginHandler());
             server.createContext("/", new StaticFileHandler());
-            server.setExecutor(null);
+            server.setExecutor(java.util.concurrent.Executors.newFixedThreadPool(10));
             server.start();
             System.out.println("=========================================");
             System.out.println(" Servidor Web: http://localhost:" + PORT);
@@ -112,7 +113,7 @@ public class ApiServer {
             try {
                 switch (method) {
                     case "GET":
-                        handleGet(ex);
+                        handleGet(ex, id);
                         break;
                     case "POST":
                         handlePost(ex);
@@ -131,7 +132,16 @@ public class ApiServer {
             }
         }
 
-        private void handleGet(HttpExchange ex) throws IOException {
+        private void handleGet(HttpExchange ex, int id) throws IOException {
+            if (id > 0 && "alunos".equals(entity)) {
+                Aluno a = alunoOps.listarAlunos().stream().filter(x -> x.getId() == id).findFirst().orElse(null);
+                if (a != null) {
+                    sendJson(ex, 200, gson.toJson(a));
+                } else {
+                    sendJson(ex, 404, "{\"erro\":\"Aluno não encontrado\"}");
+                }
+                return;
+            }
             String json;
             switch (entity) {
                 case "alunos":
@@ -201,8 +211,22 @@ public class ApiServer {
             }
             if (erroValidacao != null) {
                 sendJson(ex, 400, "{\"erro\":\"" + erroValidacao + "\"}");
+            } else if (!ok) {
+                String err = entity.equals("alunos") ? alunoOps.getUltimoErro() : "Erro ao cadastrar";
+                sendJson(ex, 400, "{\"erro\":\"" + (err != null ? err : "Erro ao cadastrar") + "\"}");
             } else {
-                sendJson(ex, ok ? 201 : 400, "{\"sucesso\":" + ok + "}");
+                int generatedId = 1;
+                if ("alunos".equals(entity)) {
+                    List<Aluno> list = alunoOps.listarAlunos();
+                    if (!list.isEmpty()) generatedId = list.get(list.size() - 1).getId();
+                } else if ("planos".equals(entity)) {
+                    List<Plano> list = planoOps.listarPlanos();
+                    if (!list.isEmpty()) generatedId = list.get(list.size() - 1).getId();
+                } else if ("pagamentos".equals(entity)) {
+                    List<PagamentoOperacoes.PagamentoView> list = pagamentoOps.listarPagamentos();
+                    if (!list.isEmpty()) generatedId = list.get(list.size() - 1).idPagamento;
+                }
+                sendJson(ex, 201, "{\"sucesso\":true,\"id\":" + generatedId + ",\"mensagem\":\"Registro criado com sucesso!\"}");
             }
         }
 
@@ -325,6 +349,31 @@ public class ApiServer {
             ex.sendResponseHeaders(200, file.length());
             try (OutputStream os = ex.getResponseBody(); FileInputStream fis = new FileInputStream(file)) {
                 fis.transferTo(os);
+            }
+        }
+    }
+
+    static class LoginHandler implements HttpHandler {
+        @Override
+        public void handle(HttpExchange ex) throws IOException {
+            if (handleCors(ex))
+                return;
+            if (!"POST".equalsIgnoreCase(ex.getRequestMethod())) {
+                ex.sendResponseHeaders(405, -1);
+                return;
+            }
+            String body = new String(ex.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+            try {
+                com.google.gson.JsonObject json = com.google.gson.JsonParser.parseString(body).getAsJsonObject();
+                String email = json.has("email") ? json.get("email").getAsString() : "";
+                String senha = json.has("senha") ? json.get("senha").getAsString() : "";
+                if ("admin@fitup.com".equalsIgnoreCase(email) && "Senha@123".equals(senha)) {
+                    sendJson(ex, 200, "{\"status\":\"sucesso\",\"mensagem\":\"Login realizado com sucesso!\",\"token\":\"tok_admin_fitup_2026\"}");
+                } else {
+                    sendJson(ex, 401, "{\"erro\":\"Credenciais inválidas. Verifique seu e-mail e senha.\"}");
+                }
+            } catch (Exception e) {
+                sendJson(ex, 400, "{\"erro\":\"Payload inválido\"}");
             }
         }
     }

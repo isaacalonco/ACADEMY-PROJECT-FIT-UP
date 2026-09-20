@@ -1,27 +1,3 @@
--- ============================================================================
--- PROJETO FINAL: LABORATÓRIO DE BANCO DE DADOS (GPE17M40083)
--- UNIVERSIDADE CATÓLICA DE BRASÍLIA (UCB) - ENGENHARIA DE SOFTWARE
--- PROFESSOR: Samuel Novais Moura Júnior
--- DOMÍNIO: FIT UP — Sistema de Gestão de Academia com Avaliação Física
--- ARQUIVO: 01_ddl.sql — Criação do Esquema Físico (PostgreSQL 14+ / ANSI SQL)
--- ============================================================================
--- CONFORMIDADE COM CRITÉRIOS DE COMPLEXIDADE:
--- 1. Oito entidades principais (sem contar tabelas puramente associativas):
---    PESSOA, ALUNO, INSTRUTOR, PLANO, FICHA_TREINO, EXERCICIO, AVALIACAO_FISICA, PAGAMENTO.
--- 2. Dois relacionamentos N:N com atributo próprio na associação:
---    - FICHA_EXERCICIO (Associação Ficha-Exercício com séries, repetições, carga e ordem).
---    - ALUNO_PLANO_CONTRATO (Associação Aluno-Plano com data_adesao, valor_cobrado, desconto).
--- 3. Autorrelacionamento:
---    - ALUNO (indicação de matrícula: aluno_indicador_id).
---    - INSTRUTOR (hierarquia de supervisão técnica: instrutor_supervisor_id).
--- 4. Generalização / Especialização:
---    - PESSOA (superclasse) -> ALUNO e INSTRUTOR (subclasses), com estratégia de Tabela por Subclasse.
--- 5. Entidade Fraca (identificação por dependência):
---    - AVALIACAO_FISICA (identificada por id_aluno + numero_sequencial_avaliacao).
--- 6. Atributo Temporal / Histórico Datado:
---    - HISTORICO_SITUACAO_MATRICULA (rastreia mudanças de status: Ativo, Trancado, Cancelado, Inadimplente).
--- ============================================================================
-
 -- Limpeza preventiva de objetos caso já existam (execução limpa)
 DROP TABLE IF EXISTS tb_auditoria_sistema CASCADE;
 DROP TABLE IF EXISTS tb_ficha_exercicio CASCADE;

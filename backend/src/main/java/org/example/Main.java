@@ -45,6 +45,24 @@ public class Main {
         banco.Conexao.inicializarBanco();
         ApiServer.start();
 
+        // Modo servidor: sem menu interativo (para testes automatizados)
+        boolean modoServidor = false;
+        for (String arg : args) {
+            if ("--server".equalsIgnoreCase(arg)) {
+                modoServidor = true;
+                break;
+            }
+        }
+        // Detectar stdin não-interativo (redirecionado / sem console)
+        if (!modoServidor && System.console() == null) {
+            modoServidor = true;
+        }
+        if (modoServidor) {
+            System.out.println("[INFO] Rodando em modo servidor. API disponível em http://localhost:8080");
+            try { Thread.currentThread().join(); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+            return;
+        }
+
         int opcao = -1;
         while (opcao != 0) {
             clearScreen();

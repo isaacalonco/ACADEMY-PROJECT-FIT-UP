@@ -1,0 +1,16 @@
+{
+  "name": "fitup-e2e",
+  "version": "1.0.0",
+  "description": "Testes E2E Playwright - FIT UP Academy",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  },
+  "dependencies": {
+    "docx": "^9.7.1"
+  }
+}
