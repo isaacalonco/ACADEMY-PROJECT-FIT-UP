@@ -65,7 +65,7 @@ Se você quiser abrir o código e rodar pelo seu ambiente de desenvolvimento:
 ## Estrutura do Projeto
 
 ```text
-ACADEMY-POO-PROJECT/
+ACADEMY-PROJECT-FIT-UP/
 ├── backend/                    # Código Java (Backend)
 │   ├── pom.xml                 
 │   ├── target/                 # Arquivos compilados (.jar)
@@ -78,4 +78,52 @@ ACADEMY-POO-PROJECT/
 │   ├── index.html
 │   ├── styles.css
 │   └── app.js
+├── docs/                       # Documentação: Teste de Software
+│   ├── README.md               # Central de Documentação
+│   ├── RELATORIO_FINAL_TESTE_SOFTWARE.md (e .docx)
+│   └── 01 a 05 (requisitos, BDD, plano, casos de teste, evidências)
+├── docs_banco_de_dados/        # Documentação: Laboratório de Banco de Dados (UCB)
+│   ├── README.md               # Central de Banco de Dados
+│   ├── RELATORIO_FINAL_BANCO_DE_DADOS.md (e .docx)
+│   └── 01 a 05 (escopo, MER conceitual, dicionário de dados, modelo lógico/3FN, segurança/EXPLAIN)
+└── sql/                        # Scripts Físicos de Banco de Dados (PostgreSQL / ANSI)
+    ├── 01_ddl.sql              # DDL: Criação do esquema com restrições nomeadas
+    ├── 02_carga.sql            # DML: Carga com >50 pessoas e >110 pagamentos
+    └── 03_consultas.sql        # 15 Consultas comentadas (Básicas, Junções e Avançadas)
 ```
+
+---
+
+## 📚 1. Trabalho Final de Teste de Software
+
+Todo o material acadêmico exigido pelo roteiro de testes está disponível na pasta [`docs/`](docs/README.md) nos formatos **Markdown (`.md`)** e **Microsoft Word (`.docx`)**:
+
+1. **[Documento de Visão do Sistema](docs/01-documento-de-visao.md)** ([Word .docx](docs/01-documento-de-visao.docx))
+2. **[Requisitos Ágeis & Cenários BDD](docs/02-requisitos-e-bdd.md)** ([Word .docx](docs/02-requisitos-e-bdd.docx))
+3. **[Plano de Testes de Software](docs/03-plano-de-testes.md)** ([Word .docx](docs/03-plano-de-testes.docx))
+4. **[Catálogo de Casos de Teste (26 Casos)](docs/04-casos-de-teste.md)** ([Word .docx](docs/04-casos-de-teste.docx))
+5. **[Evidências de Execução e Defeitos](docs/05-evidencias-e-defeitos.md)** ([Word .docx](docs/05-evidencias-e-defeitos.docx))
+6. 🏆 **[Relatório Final Consolidado para Entrega](docs/RELATORIO_FINAL_TESTE_SOFTWARE.md)** ([Word .docx](docs/RELATORIO_FINAL_TESTE_SOFTWARE.docx))
+
+---
+
+## 🗄️ 2. Projeto Final de Laboratório de Banco de Dados (UCB)
+
+Desenvolvido para a disciplina **Laboratório de Banco de Dados (GPE17M40083)** da **Universidade Católica de Brasília (UCB)** sob orientação do **Prof. Samuel Novais Moura Júnior**.
+
+Tema oficial homologado: **Academia com Avaliação Física** (Planos, contratos, treinos e série histórica de medidas antropométricas).
+
+A documentação completa está na pasta [`docs_banco_de_dados/`](docs_banco_de_dados/README.md) em **Markdown (`.md`)** e **Word (`.docx`)**:
+
+1. **[Escopo e 20 Regras de Negócio (RN01 a RN20)](docs_banco_de_dados/01_escopo_e_regras_de_negocio.md)** ([Word .docx](docs_banco_de_dados/01_escopo_e_regras_de_negocio.docx)) — *Artefato A1*
+2. **[Modelo Entidade-Relacionamento Conceitual (MER)](docs_banco_de_dados/02_modelo_conceitual_mer.md)** ([Word .docx](docs_banco_de_dados/02_modelo_conceitual_mer.docx)) — *Artefato A2*
+3. **[Dicionário de Dados Conceitual Oficial](docs_banco_de_dados/03_dicionario_de_dados.md)** ([Word .docx](docs_banco_de_dados/03_dicionario_de_dados.docx)) — *Artefato A3 (Anexo A)*
+4. **[Modelo Lógico Relacional e Normalização (3FN e BCNF)](docs_banco_de_dados/04_modelo_logico_e_normalizacao.md)** ([Word .docx](docs_banco_de_dados/04_modelo_logico_e_normalizacao.docx)) — *Artefatos A4 e A5*
+5. **[Segurança, Transações, Otimização EXPLAIN e Backup](docs_banco_de_dados/05_seguranca_transacoes_e_desempenho.md)** ([Word .docx](docs_banco_de_dados/05_seguranca_transacoes_e_desempenho.docx)) — *Artefatos B1 a B7*
+6. 🏆 **[Relatório Final Consolidado de Banco de Dados](docs_banco_de_dados/RELATORIO_FINAL_BANCO_DE_DADOS.md)** ([Word .docx](docs_banco_de_dados/RELATORIO_FINAL_BANCO_DE_DADOS.docx)) — *Relatório Mestre Integrado*
+
+### Scripts Físicos Executáveis:
+- 📜 **[`sql/01_ddl.sql`](sql/01_ddl.sql)**: Criação do esquema físico, chaves, especialização e restrições nomeadas (`pk_`, `uq_`, `fk_`, `ck_`, `idx_`).
+- 📜 **[`sql/02_carga.sql`](sql/02_carga.sql)**: Carga de dados realistas com casos de contorno, mais de 50 pessoas e mais de 110 pagamentos.
+- 📜 **[`sql/03_consultas.sql`](sql/03_consultas.sql)**: 15 Consultas comentadas (5 Básicas, 5 Junções/Agregação, 5 Avançadas com subconsultas correlacionadas e `EXISTS`).
+

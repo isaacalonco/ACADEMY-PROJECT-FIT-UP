@@ -37,5 +37,13 @@ build/
 .vscode/
 
 ### Mac OS ###
-.DS_Store*.zip
-academy.db
+.DS_Store
+*.zip
+
+### Banco de dados e arquivos gerados em runtime ###
+*.db
+
+### Node.js & Playwright ###
+node_modules/
+package-lock.json
+test-results/
