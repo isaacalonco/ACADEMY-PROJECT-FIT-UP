@@ -78,14 +78,6 @@ ACADEMY-PROJECT-FIT-UP/
 │   ├── index.html
 │   ├── styles.css
 │   └── app.js
-├── docs/                       # Documentação: Teste de Software
-│   ├── README.md               # Central de Documentação
-│   ├── RELATORIO_FINAL_TESTE_SOFTWARE.md (e .docx)
-│   └── 01 a 05 (requisitos, BDD, plano, casos de teste, evidências)
-├── docs_banco_de_dados/        # Documentação: Laboratório de Banco de Dados (UCB)
-│   ├── README.md               # Central de Banco de Dados
-│   ├── RELATORIO_FINAL_BANCO_DE_DADOS.md (e .docx)
-│   └── 01 a 05 (escopo, MER conceitual, dicionário de dados, modelo lógico/3FN, segurança/EXPLAIN)
 └── sql/                        # Scripts Físicos de Banco de Dados (PostgreSQL / ANSI)
     ├── 01_ddl.sql              # DDL: Criação do esquema com restrições nomeadas
     ├── 02_carga.sql            # DML: Carga com >50 pessoas e >110 pagamentos
