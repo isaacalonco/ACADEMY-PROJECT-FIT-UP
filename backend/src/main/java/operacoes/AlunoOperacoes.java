@@ -92,10 +92,28 @@ public class AlunoOperacoes {
                 a.setEmail(rs.getString("email"));
                 a.setTelefone(rs.getString("telefone"));
                 a.setEndereco(rs.getString("endereco"));
-                a.setDataNascimento(rs.getDate("data_nascimento").toLocalDate());
+                String dataNascStr = rs.getString("data_nascimento");
+                if (dataNascStr != null && dataNascStr.length() >= 10) {
+                    try {
+                        a.setDataNascimento(LocalDate.parse(dataNascStr.substring(0, 10)));
+                    } catch (Exception e) {
+                        a.setDataNascimento(LocalDate.now());
+                    }
+                } else {
+                    a.setDataNascimento(LocalDate.now());
+                }
                 a.setPeso(rs.getDouble("peso"));
                 a.setAltura(rs.getDouble("altura"));
-                a.setDataCadastro(rs.getDate("data_cadastro").toLocalDate());
+                String dataCadStr = rs.getString("data_cadastro");
+                if (dataCadStr != null && dataCadStr.length() >= 10) {
+                    try {
+                        a.setDataCadastro(LocalDate.parse(dataCadStr.substring(0, 10)));
+                    } catch (Exception e) {
+                        a.setDataCadastro(LocalDate.now());
+                    }
+                } else {
+                    a.setDataCadastro(LocalDate.now());
+                }
                 a.setAtivo(rs.getBoolean("ativo"));
                 alunos.add(a);
             }

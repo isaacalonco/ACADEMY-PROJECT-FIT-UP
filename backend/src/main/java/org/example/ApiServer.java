@@ -181,6 +181,22 @@ public class ApiServer {
                     erroValidacao = Validador.validarAluno(a);
                     if (erroValidacao == null) {
                         ok = alunoOps.cadastrarAluno(a);
+                        if (ok) {
+                            try {
+                                com.google.gson.JsonObject jsonObj = com.google.gson.JsonParser.parseString(body).getAsJsonObject();
+                                if (jsonObj.has("idPlano") && !jsonObj.get("idPlano").isJsonNull()) {
+                                    int idPlano = jsonObj.get("idPlano").getAsInt();
+                                    if (idPlano > 0) {
+                                        List<Aluno> list = alunoOps.listarAlunos();
+                                        if (!list.isEmpty()) {
+                                            int novoId = list.get(list.size() - 1).getId();
+                                            matriculaOps.atualizarPlanoDoAluno(novoId, idPlano);
+                                        }
+                                    }
+                                }
+                            } catch (Exception ignored) {
+                            }
+                        }
                     }
                     break;
                 case "instrutores":

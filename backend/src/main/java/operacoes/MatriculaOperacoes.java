@@ -45,12 +45,18 @@ public class MatriculaOperacoes {
              ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
+                String dataMatStr = rs.getString("data_matricula");
+                if (dataMatStr != null && dataMatStr.length() >= 10) {
+                    dataMatStr = dataMatStr.substring(0, 10);
+                } else if (dataMatStr == null) {
+                    dataMatStr = LocalDate.now().toString();
+                }
                 matriculas.add(new MatriculaView(
                         rs.getInt("id_matricula"),
                         rs.getInt("id_aluno"),
                         rs.getString("nome_aluno"),
                         rs.getString("nome_plano"),
-                        rs.getDate("data_matricula").toLocalDate().toString()
+                        dataMatStr
                 ));
             }
 
