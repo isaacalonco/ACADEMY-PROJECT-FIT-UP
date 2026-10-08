@@ -17,6 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const AUTH_STORAGE_KEY = 'fitup_auth_session';
 
+    // Base URL for API — empty string for same-origin (local dev / Railway).
+    // When deployed to Vercel, set window.FITUP_API_URL or use Vercel env vars.
+    const API_BASE_URL = window.FITUP_API_URL || '';
+
     // =========================================================================
     // AUTHENTICATION LOGIC
     // =========================================================================
@@ -78,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const senha = inputSenha.value;
 
             try {
-                const res = await fetch('/api/login', {
+                const res = await fetch(API_BASE_URL + '/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, senha })
@@ -914,7 +918,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================================================
     async function fetchData(url) {
         try {
-            const r = await fetch(url);
+            const r = await fetch(API_BASE_URL + url);
             if (!r.ok) throw 0;
             return await r.json();
         } catch {
@@ -924,7 +928,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function postData(url, data) {
         try {
-            const r = await fetch(url, {
+            const r = await fetch(API_BASE_URL + url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -938,7 +942,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function putData(url, data) {
         try {
-            const r = await fetch(url, {
+            const r = await fetch(API_BASE_URL + url, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -952,7 +956,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function deleteData(url) {
         try {
-            const r = await fetch(url, { method: 'DELETE' });
+            const r = await fetch(API_BASE_URL + url, { method: 'DELETE' });
             return r.ok;
         } catch {
             showToast('Falha de conexão com a API.', 'error');

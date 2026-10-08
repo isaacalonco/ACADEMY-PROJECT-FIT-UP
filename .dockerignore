@@ -1,0 +1,15 @@
+.git
+.gitignore
+.idea
+.vscode
+.agents
+docs
+tests
+sql
+node_modules
+*.db
+*.zip
+backend/target
+backend/.idea
+README.md
+iniciar.bat

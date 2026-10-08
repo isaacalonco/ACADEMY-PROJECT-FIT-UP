@@ -730,7 +730,12 @@
     <!-- NOTIFICAÇÕES TOAST -->
     <div class="toast-rack" id="toast-container" aria-live="polite" aria-atomic="false"></div>
 
-    <!-- Lógica da aplicação -->
+    <!-- API Configuration — set your Railway backend URL here after deploy -->
+    <script>
+        // LOCAL DEV: leave empty (same-origin, served by Java backend)
+        // PRODUCTION: set to your Railway URL, e.g. 'https://your-app.up.railway.app'
+        window.FITUP_API_URL = '';
+    </script>
     <script src="app.js"></script>
 </body>
 </html>

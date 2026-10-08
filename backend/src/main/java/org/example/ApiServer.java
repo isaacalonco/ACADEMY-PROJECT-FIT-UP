@@ -30,7 +30,8 @@ import java.util.List;
 
 public class ApiServer {
 
-    private static final int PORT = 8080;
+    private static final int PORT = Integer.parseInt(
+            System.getenv("PORT") != null ? System.getenv("PORT") : "8080");
     private static final AlunoOperacoes alunoOps = new AlunoOperacoes();
     private static final InstrutorOperacoes instrutorOps = new InstrutorOperacoes();
     private static final PlanoOperacoes planoOps = new PlanoOperacoes();
