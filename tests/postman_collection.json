@@ -1,0 +1,230 @@
+{
+  "info": {
+    "name": "FIT UP Academy API Collection",
+    "description": "Suíte de Testes Automatizados de API para o sistema FIT UP Academy executável via Newman e Postman.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://academy-project-fit-up-production.up.railway.app",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "CT-API-01: Autenticação de Administrador",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code deve ser 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Corpo da resposta deve confirmar status de sucesso\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.status).to.eql(\"sucesso\");",
+              "});",
+              "pm.test(\"Token de autenticação deve ser retornado\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.token).to.be.a(\"string\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin@fitup.com\",\n  \"senha\": \"Senha@123\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "login"]
+        }
+      }
+    },
+    {
+      "name": "CT-API-02: Listagem de Alunos Cadastrados",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code deve ser 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Resposta deve ser um array não vazio de alunos\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an(\"array\");",
+              "    pm.expect(jsonData.length).to.be.above(0);",
+              "});",
+              "pm.test(\"Cada aluno deve conter atributos essenciais\", function () {",
+              "    var first = pm.response.json()[0];",
+              "    pm.expect(first).to.have.property(\"id\");",
+              "    pm.expect(first).to.have.property(\"nome\");",
+              "    pm.expect(first).to.have.property(\"cpf\");",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/alunos",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "alunos"]
+        }
+      }
+    },
+    {
+      "name": "CT-API-03: Cadastro de Novo Plano",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code deve ser 201 Created\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Deve confirmar criação com sucesso\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.sucesso).to.be.true;",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nome\": \"Plano Newman Postman Test\",\n  \"valor\": 129.90\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/planos",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "planos"]
+        }
+      }
+    },
+    {
+      "name": "CT-API-04: Consulta de Planos Disponíveis",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code deve ser 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Resposta deve ser uma lista de planos\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an(\"array\");",
+              "    pm.expect(jsonData.length).to.be.above(0);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/planos",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "planos"]
+        }
+      }
+    },
+    {
+      "name": "CT-API-05: Lançamento de Mensalidade / Pagamento",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code deve ser 201 Created\", function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test(\"Deve confirmar registro de pagamento com sucesso\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.sucesso).to.be.true;",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"idAluno\": 3,\n  \"valor\": 139.90,\n  \"status\": \"Pago\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/pagamentos",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "pagamentos"]
+        }
+      }
+    },
+    {
+      "name": "CT-API-06: Consulta da Equipe de Instrutores",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status code deve ser 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"Retorna lista de instrutores registrados\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an(\"array\");",
+              "    pm.expect(jsonData.length).to.be.above(0);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/instrutores",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "instrutores"]
+        }
+      }
+    }
+  ]
+}
