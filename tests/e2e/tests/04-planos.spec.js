@@ -3,34 +3,46 @@ const { test, expect } = require('@playwright/test');
 test('CT-E2E-04: Criação de plano e atualização no select de matrículas', async ({ page }) => {
   await page.goto('/');
 
-  // Navegar para Planos
-  await page.locator('li[data-page="planos"] a').click();
+  // Autenticar com credenciais demo se necessário
+  const authContainer = page.locator('#auth-container');
+  if (await authContainer.isVisible()) {
+    await page.locator('#btn-fill-demo').click();
+    await page.locator('#btn-login-submit').click();
+    await expect(authContainer).toHaveClass(/hidden/, { timeout: 10000 });
+  }
+
+  // Navegar para a página de Planos
+  await page.locator('.sidebar-nav-item[data-page="planos"]').click();
   await expect(page.locator('#page-planos')).toBeVisible();
 
   // Abrir modal de novo plano
-  await page.locator('#page-planos .btn-primary').click();
-  await expect(page.locator('#modal-plano')).toBeVisible();
+  await page.locator('#page-planos [data-modal="modal-plano"]').click();
+  const modalPlano = page.locator('#modal-plano');
+  await expect(modalPlano).toHaveClass(/active/);
 
   // Preencher dados do plano
-  await page.locator('#form-plano input[name="nome"]').fill('Plano E2E Test');
-  await page.locator('#form-plano input[name="valor"]').fill('149.90');
+  const timestamp = Date.now().toString().slice(-4);
+  const nomePlano = `Plano VIP ${timestamp}`;
+  await page.locator('#plano-nome').fill(nomePlano);
+  await page.locator('#plano-valor').fill('159.90');
 
   // Salvar o plano
   await page.locator('#btn-submit-plano').click();
 
-  // Modal deve fechar (usa opacity, não display:none)
-  await expect(page.locator('#toast')).toContainText('cadastrad', { timeout: 7000 });
-  await expect(page.locator('#modal-plano')).not.toHaveClass(/active/, { timeout: 5000 });
+  // Modal deve fechar e toast de sucesso deve aparecer
+  await expect(modalPlano).not.toHaveClass(/active/, { timeout: 8000 });
+  await expect(page.locator('#toast-container')).toContainText('sucesso', { timeout: 8000 });
 
   // O plano deve aparecer na tabela de planos
-  await expect(page.locator('#planos-table')).toContainText('Plano E2E Test');
+  await expect(page.locator('#planos-table')).toContainText(nomePlano, { timeout: 8000 });
 
-  // Navegar para Alunos e verificar que o plano aparece no select
-  await page.locator('li[data-page="alunos"] a').click();
-  await page.locator('#page-alunos .btn-primary').click();
-  await expect(page.locator('#modal-aluno')).toBeVisible();
+  // Navegar para Alunos e verificar que o plano aparece no select de matrícula
+  await page.locator('.sidebar-nav-item[data-page="alunos"]').click();
+  await page.locator('#page-alunos [data-modal="modal-aluno"]').click();
+  await expect(page.locator('#modal-aluno')).toHaveClass(/active/);
 
-  // O select de plano deve conter o plano recém criado
+  // O select de planos deve conter a nova opção
   const selectPlano = page.locator('#select-plano-aluno');
-  await expect(selectPlano).toContainText('Plano E2E Test', { timeout: 5000 });
+  await expect(selectPlano).toContainText(nomePlano, { timeout: 5000 });
 });
+

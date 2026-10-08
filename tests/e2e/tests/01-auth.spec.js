@@ -1,26 +1,37 @@
 const { test, expect } = require('@playwright/test');
 
-test('CT-E2E-01: Fluxo de autenticação e redirecionamento para Dashboard', async ({ page }) => {
+test('CT-E2E-01: Fluxo de autenticação e navegação no Dashboard', async ({ page }) => {
   await page.goto('/');
 
-  // A página deve carregar e exibir a sidebar com o logo FIT UP
-  await expect(page.locator('.logo h1')).toContainText('FIT UP');
+  // 1. Tela de login inicial deve estar visível
+  const authContainer = page.locator('#auth-container');
+  await expect(authContainer).toBeVisible();
 
-  // O Dashboard deve estar ativo por padrão
+  // 2. Preencher com acesso demo e submeter
+  await page.locator('#btn-fill-demo').click();
+  await page.locator('#btn-login-submit').click();
+
+  // 3. Após autenticação, tela de login deve ser ocultada
+  await expect(authContainer).toHaveClass(/hidden/, { timeout: 10000 });
+
+  // 4. Sidebar deve exibir o logo FIT UP e status online
+  await expect(page.locator('.sidebar-title')).toContainText('FIT UP');
+  await expect(page.locator('.sidebar-profile')).toBeVisible();
+
+  // 5. O Dashboard deve estar ativo com os cards de KPIs
   await expect(page.locator('#page-dashboard')).toBeVisible();
-
-  // Os cards de estatísticas devem estar presentes
   await expect(page.locator('#stat-alunos')).toBeVisible();
   await expect(page.locator('#stat-instrutores')).toBeVisible();
   await expect(page.locator('#stat-planos')).toBeVisible();
   await expect(page.locator('#stat-pagamentos')).toBeVisible();
 
-  // Navegação: clicar em Alunos deve exibir a seção correta
-  await page.locator('li[data-page="alunos"] a').click();
+  // 6. Navegação entre páginas: Alunos
+  await page.locator('.sidebar-nav-item[data-page="alunos"]').click();
   await expect(page.locator('#page-alunos')).toBeVisible();
   await expect(page.locator('#page-dashboard')).not.toBeVisible();
 
-  // Voltar ao Dashboard
-  await page.locator('li[data-page="dashboard"] a').click();
+  // 7. Voltar ao Dashboard
+  await page.locator('.sidebar-nav-item[data-page="dashboard"]').click();
   await expect(page.locator('#page-dashboard')).toBeVisible();
 });
+
