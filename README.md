@@ -1,3 +1,11 @@
+
+EXPLAIN
+SELECT *
+FROM tb_pagamento
+WHERE status_pagamento = 'Atrasado'
+AND data_vencimento < '2024-06-10';
+
+
 # FIT UP — Sistema de Gestão de Academia
 
 Sistema completo e integrado de gestão de academia com avaliação física, desenvolvido com arquitetura modular, backend em **Java (POO)**, interface Web responsiva moderna e banco de dados relacional.
